@@ -33,7 +33,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">
-                ProjectFlow
+                Audtax Project Manager
               </h1>
               <p className="text-sm text-muted-foreground">
                 Gerencie seus projetos com metodologia estruturada

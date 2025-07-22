@@ -26,7 +26,7 @@ export function StatusFilter({ activeFilter, onFilterChange }: StatusFilterProps
           variant={activeFilter === filter.value ? 'default' : 'ghost'}
           size="sm"
           onClick={() => onFilterChange(filter.value)}
-          className="text-xs"
+          className="text-xs truncate max-w-[100px]" // Adicione estilos para truncar o texto
         >
           {filter.label}
         </Button>
