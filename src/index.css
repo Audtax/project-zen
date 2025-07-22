@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Apple-inspired design system. All colors MUST be HSL. */
+/* Appale-inspired design system. All colors MUST be HSL. */
 
 @layer base {
   :root {
