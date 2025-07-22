@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle, Clock, Circle, ExternalLink, Link, Edit3 } from 'lucide-react';
+import { CheckCircle, Clock, Circle, ExternalLink, Link, Edit3, UserPlus2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,6 +15,10 @@ interface StepCardProps {
 export function StepCard({ step, onStatusChange, onLinkChange }: StepCardProps) {
   const [isEditingLink, setIsEditingLink] = useState(false);
   const [linkValue, setLinkValue] = useState(step.link_documento || '');
+
+  // Responsáveis pela etapa (apenas local, não persiste)
+  const [responsaveis, setResponsaveis] = useState<string[]>([]);
+  const [novoResponsavel, setNovoResponsavel] = useState('');
 
   const getStatusIcon = (status: StepStatus) => {
     switch (status) {
@@ -59,6 +63,17 @@ export function StepCard({ step, onStatusChange, onLinkChange }: StepCardProps) 
     setIsEditingLink(false);
   };
 
+  const handleAddResponsavel = () => {
+    if (novoResponsavel.trim() && !responsaveis.includes(novoResponsavel.trim())) {
+      setResponsaveis([...responsaveis, novoResponsavel.trim()]);
+      setNovoResponsavel('');
+    }
+  };
+
+  const handleRemoveResponsavel = (nome: string) => {
+    setResponsaveis(responsaveis.filter(r => r !== nome));
+  };
+
   return (
     <Card className={`transition-all duration-200 hover:shadow-md border-l-4 ${getStatusColor(step.status)}`}>
       <CardHeader className="pb-3">
@@ -93,6 +108,54 @@ export function StepCard({ step, onStatusChange, onLinkChange }: StepCardProps) 
       
       <CardContent className="pt-0">
         <div className="space-y-3">
+          {/* Campo de responsáveis */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <UserPlus2 className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground font-medium">Responsáveis pela etapa:</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {responsaveis.length === 0 && (
+                <span className="text-xs text-muted-foreground">Nenhum responsável adicionado</span>
+              )}
+              {responsaveis.map((nome) => (
+                <span key={nome} className="inline-flex items-center bg-muted px-2 py-0.5 rounded text-xs">
+                  {nome}
+                  <button
+                    type="button"
+                    className="ml-1 text-muted-foreground hover:text-destructive"
+                    onClick={() => handleRemoveResponsavel(nome)}
+                    aria-label={`Remover ${nome}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Digite o nome e pressione Enter..."
+                value={novoResponsavel}
+                onChange={e => setNovoResponsavel(e.target.value)}
+                className="text-xs"
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddResponsavel();
+                  }
+                }}
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleAddResponsavel}
+                disabled={!novoResponsavel.trim()}
+              >
+                Adicionar
+              </Button>
+            </div>
+          </div>
+
           {isEditingLink ? (
             <div className="space-y-2">
               <Input
